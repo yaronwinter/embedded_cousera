@@ -7,9 +7,17 @@ TARGET = $(BASENAME).out
 LDFLAGS = -Wl,-Map=$(BASENAME).map
 CFLAGS = $(OVERIDES)
 
-OBJS = $(SRCS:.c=.o)
+PREPS = $(SRCS:.c=.i)
+ASMBS = $(PREPS:.i=.s)
+OBJS = $(ASMBS:.s=.o)
 
-%.o : %.c
+%.i : %.c
+	$(CC) -E $(CFLAGS) $< -o $@
+
+%.s : %.i
+	$(CC) -S $(CFLAGS) $< -o $@
+
+%.o : %.s
 	$(CC) -c $< $(CFLAGS) -o $@
 
 .PHONY: all
@@ -17,7 +25,7 @@ all: $(TARGET)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(TARGET) $(BASENAME).map
+	rm -f $(OBJS) $(ASMBS) $(PREPS) $(TARGET) $(BASENAME).map
 
-$(TARGET) : $(OBJS)
+$(TARGET) : $(OBJS) $(PREPS) $(ASMBS)
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
