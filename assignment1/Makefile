@@ -1,23 +1,20 @@
 include sources.mk
 
-OVERIDES = xxx
+#OVERIDES = xxx
 CC = gcc
 BASENAME = stats
 TARGET = $(BASENAME).out
 LDFLAGS = -Wl,-Map=$(BASENAME).map
 CFLAGS = $(OVERIDES)
+CPPFLAGS = -MF"$@" -MM
 
-PREPS = $(SRCS:.c=.i)
-ASMBS = $(PREPS:.i=.s)
-OBJS = $(ASMBS:.s=.o)
+DEPS = $(SRCS:.c=.dep)
+OBJS = $(SRCS:.c=.o)
 
-%.i : %.c
-	$(CC) -E $(CFLAGS) $< -o $@
+%.dep : %.c
+	$(CC) -E $<  $(CFLAGS) $(CPPFLAGS)
 
-%.s : %.i
-	$(CC) -S $(CFLAGS) $< -o $@
-
-%.o : %.s
+%.o : %.c
 	$(CC) -c $< $(CFLAGS) -o $@
 
 .PHONY: all
@@ -25,7 +22,7 @@ all: $(TARGET)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(ASMBS) $(PREPS) $(TARGET) $(BASENAME).map
+	rm -f $(OBJS) $(DEPS) $(TARGET) $(BASENAME).map
 
-$(TARGET) : $(OBJS) $(PREPS) $(ASMBS)
+$(TARGET) : $(OBJS) $(DEPS)
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
