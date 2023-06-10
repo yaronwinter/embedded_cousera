@@ -38,10 +38,12 @@ CPPFLAGS = -MF"$@" -MM
 
 ifeq ($(PLATFORM),HOST)
 	CC = gcc
+	SIZE_CC = size
 	LDFLAGS  = $(COMMON_LDFLAGS)
 	CFLAGS = $(COMMON_CFLAGS)
 else
 	CC = arm-none-eabi-gcc
+	SIZE_CC = arm-none-eabi-size
 	LDFLAGS  = $(COMMON_LDFLAGS) -T $(LINKER_FILE)
 	CFLAGS = $(COMMON_CFLAGS) -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -mfloat-abi=hard -mfpu=fpv4-sp-d16
 endif
@@ -75,3 +77,9 @@ clean:
 
 $(TARGET) : $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+
+.PHONY: size
+size:
+	$(SIZE_CC) -Atx $(TARGET)
+	$(SIZE_CC) -Bx $(TARGET)
+	$(SIZE_CC) -Bd $(TARGET)
