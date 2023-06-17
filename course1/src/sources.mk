@@ -9,25 +9,17 @@
 #
 #*****************************************************************************
 
-COMMON_SOURCES = main.c \
-                 memory.c
-
-COMMON_INCLUDES = -I. \
-				  -I../include/common
-
-ARM_SOURCES = interrupts_msp432p401r_gcc.c \
-			  startup_msp432p401r_gcc.c \
-			  system_msp432p401r.c
-
-ARM_INCLUDES = -I../include/CMSIS \
-			   -I../include/msp432
+INCLUDES = -I. \
+		   -I../include/common
 
 
 # Add your Source files to this variable
-ifeq ($(PLATFORM),HOST)
-	SOURCES = $(COMMON_SOURCES)
-	INCLUDES = $(COMMON_INCLUDES)
+ifeq ($(PROG),STATS)
+	SOURCES = stats.c \
+	          utils.c
 else
-	SOURCES = $(COMMON_SOURCES) $(ARM_SOURCES)
-	INCLUDES = $(COMMON_INCLUDES) $(ARM_INCLUDES)
+	SOURCES = memory.c \
+			  course.c \
+			  course_utils.c \
+			  data.c
 endif

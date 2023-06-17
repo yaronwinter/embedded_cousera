@@ -21,6 +21,10 @@
  *
  */
 #include <memory.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /***********************************************************
  Function Definitions
@@ -48,3 +52,79 @@ void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
 }
 
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length) {
+    //printf("entermy_memmove: src=%s, dst=%s\n",src, dst);
+    //printf("len src=%ld, len dst=%ld, switch length=%ld\n", strlen((char*)src), strlen((char*)dst), length);
+    uint8_t * temp = (uint8_t*) malloc((length + 1) * sizeof(uint8_t));
+
+    //printf("set temp\n");
+    uint8_t * t = temp;
+    uint8_t * s = src;
+    for (int i = 0; i < length; i++) {
+        *t = *s;
+        t++;
+        s++;
+    }
+
+    //printf("set dest. temp=%s\n", temp);
+    t = temp;
+    uint8_t * d = dst;
+    for (int i = 0; i < length; i++) {
+        //printf("\ti=%d, t=%c\n", i, *t);
+        *d = *t;
+        t++;
+        d++;
+    }
+    *d = 0;
+    //printf("dest=%s\n", dst);
+
+    free(temp);
+    //printf("exit memmove\n");
+    return dst;
+}
+
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length) {
+    uint8_t * s = src;
+    uint8_t * d = dst;
+    for (int i = 0; i < length; i++) {
+        *d = *s;
+        d++;
+        s++;
+    }
+    *d = 0;
+    return dst;
+}
+
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value) {
+    uint8_t * s = src;
+    for (int i = 0; i < length; i++) {
+        *s++ = value;
+    }
+    *s = 0;
+    return src;
+}
+
+uint8_t * my_memzero(uint8_t * src, size_t length) {
+    return my_memset(src, length, 0);
+}
+
+uint8_t * my_reverse(uint8_t * src, size_t length) {
+    uint8_t * s = src;
+    uint8_t * e = src + length - 1;
+    while (s < e) {
+        uint8_t e_val = *e;
+        *e = *s;
+        *s = e_val;
+        e--;
+        s++;
+    }
+    return src;
+}
+
+int32_t * reserve_words(size_t length) {
+    return (int32_t*) malloc(length * sizeof(int32_t));
+}
+
+void free_words(int32_t * src) {
+    free(src);
+}

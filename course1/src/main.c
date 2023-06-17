@@ -22,12 +22,16 @@
  */
 #include <platform.h>
 #include <memory.h>
+#include <inttypes.h>
+#include <stdio.h>
 
 #define MAX_LENGTH (10)
 char buffer[MAX_LENGTH];
 
 /* A pretty boring main file */
 int main(void) {
+  uint8_t ui;
+  size_t st;
   char c;
   int i;
   char * pc;
@@ -35,6 +39,8 @@ int main(void) {
   long int li;
   long long int lli;
 
+  PRINTF("sizeof(uint8_t) = %lu\n", sizeof(ui));
+  PRINTF("sizeof(size_t) = %lu\n", sizeof(st));
   PRINTF("sizeof(char) = %lu\n", sizeof(c));
   PRINTF("sizeof(int) = %lu\n", sizeof(i));
   PRINTF("sizeof(char*) = %lu\n", sizeof(pc));
@@ -59,5 +65,22 @@ int main(void) {
 
   s++;
   PRINTF("Fourth Entry =  %ld (%p)\n", (long int)s, s);
+
+  char * p = buffer + 5;
+  PRINTF("Fifth Entry (?) =  %ld (%p)\n", (long int)p, p);
+
+  int num_items = sizeof(buffer) / sizeof(buffer[0]);
+  int array_size = sizeof(buffer);
+  PRINTF("Array Size = %d, #Items = %d\n", array_size, num_items);
+
+  i = 0b01101;
+  PRINTF("0b01101 as d: %d, as hex: 0x%04x\n", i, i);
+
+  c = '5';
+  PRINTF("Letter 5: %d\n", c - '0');
+
+  c = 'B';
+  PRINTF("Letter B: %d\n", c - '0');
+  PRINTF("Letter B convert to hex: %d\n", c - 'A' + 10);
   return 0;
 }

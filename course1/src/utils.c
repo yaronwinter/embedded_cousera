@@ -30,10 +30,12 @@ void print_statistics(unsigned char* array, int length) {
 }
 
 void print_array(unsigned char* array, int length) {
+#ifdef VERBOSE
     printf("Array:");
     for (int i = 0; i < length; i++) {
         printf("\tarray[%d] = %u\n", i, array[i]);
     }
+#endif
 }
 
 unsigned char find_median(unsigned char* array, int length) {
